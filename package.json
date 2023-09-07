@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "cybersource-rest-client": "^0.0.49",
     "express": "^4.18.2",
     "jwk-to-pem": "^2.0.5"
