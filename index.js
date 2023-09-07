@@ -116,7 +116,7 @@ const simple_authorization_internet = async (_req, res) => {
         "email": "jehivis@gmail.com"
     }
       console.log('\nData 6 : ', dataArray)
-      await esperarXSegundos(5);
+      await esperarXSegundos(2);
       res.status(200).json({
         dataArray,
         datospayment,
