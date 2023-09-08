@@ -1,7 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const Configuration = require('./Configuration');
 const cybersourceRestApi =require('cybersource-rest-client');
+
+const Configuration = require('./Configuration');
+const protectRoute = require('./middleware/protectionRouter')
+const _tokenFunctions = require('./middleware/_tokenFunctions')
+
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.json());
@@ -134,15 +138,10 @@ const simple_authorization_internet = async (_req, res) => {
     }
   }
 
-// Configurar rutas
-app.get('/', (req, res) => {
-  res.send('¡Hola, mundo!');
-});
+app.post('/createToken',_tokenFunctions.createToken);
 
-app.post('/', simple_authorization_internet);
+app.post('/processPaymentTickets', protectRoute.protectRoute, simple_authorization_internet);
   
-
-// Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor Express escuchando en el puerto ${port}`);
 });

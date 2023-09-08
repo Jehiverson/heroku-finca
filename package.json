@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +13,8 @@
     "cors": "^2.8.5",
     "cybersource-rest-client": "^0.0.49",
     "express": "^4.18.2",
-    "jwk-to-pem": "^2.0.5"
+    "jsonwebtoken": "^9.0.2",
+    "jwk-to-pem": "^2.0.5",
+    "nodemon": "^3.0.1"
   }
 }
