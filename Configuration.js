@@ -5,24 +5,11 @@
 */
 
 // common parameters
-const AuthenticationType = 'http_signature';
-const RunEnvironment = 'apitest.cybersource.com';
-// const MerchantId = 'testrest_cpctv';
 const MerchantId = 'visanetgt_elespinero';
-
-// http_signature parameters
 const MerchantKeyId = '90701d38-c032-4c21-8ff4-0fd847abc7a0';
 const MerchantSecretKey = 'Pbpct3FyldbJkP1YcSW6icMZmbmuJ84NqiMgUE0DrZ8=';
-
-// jwt parameters
-const KeysDirectory = 'Resource';
-const KeyFileName = 'testrest_cpctv';
-const KeyAlias = 'testrest_cpctv';
-const KeyPass = 'testrest_cpctv';
-
-//meta key parameters
-const UseMetaKey = false;
-const PortfolioID = '';
+const AuthenticationType = 'http_signature';
+const RunEnvironment = 'apitest.cybersource.com';
 
 // logging parameters
 const EnableLog = true;
@@ -39,12 +26,6 @@ class Configuration {
         this.merchantID = MerchantId;
         this.merchantKeyId = MerchantKeyId;
         this.merchantsecretKey = MerchantSecretKey;
-        this.keyAlias = KeyAlias;
-        this.keyPass = KeyPass;
-        this.keyFileName = KeyFileName;
-        this.keysDirectory = KeysDirectory;
-        this.useMetaKey = UseMetaKey;
-        this.portfolioID = PortfolioID;
         this.logConfiguration = {
             enableLog: EnableLog,
             logFileName: LogFileName,
@@ -56,4 +37,4 @@ class Configuration {
     }
 }
 
-module.exports = Configuration;
+export default Configuration;
