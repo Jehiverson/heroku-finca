@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const cybersourceRestApi =require('cybersource-rest-client');
+const cybersourceRestApi = require('cybersource-rest-client');
 
 const Configuration = require('./Configuration');
 const protectRoute = require('./middleware/protectionRouter')
