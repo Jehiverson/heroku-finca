@@ -6,10 +6,10 @@
 
 // common parameters
 const MerchantId = 'visanetgt_elespinero';
-const MerchantKeyId = '90701d38-c032-4c21-8ff4-0fd847abc7a0';
-const MerchantSecretKey = 'Pbpct3FyldbJkP1YcSW6icMZmbmuJ84NqiMgUE0DrZ8=';
+const MerchantKeyId = '33f00546-3ca5-4aa9-8ff3-09eb9308a3af';
+const MerchantSecretKey = 'q/3IR2fY+SJJTwyXFHvBWSyhqS94MIE6iZuRz1tmgFY=';
 const AuthenticationType = 'http_signature';
-const RunEnvironment = 'apitest.cybersource.com';
+const RunEnvironment = 'api.cybersource.com';
 
 // logging parameters
 const EnableLog = true;
