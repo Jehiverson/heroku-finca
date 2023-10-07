@@ -203,7 +203,7 @@ const simple_authorization_internet = async (_req, res) => {
       referenceId,
       authenticationTransactionId
     } = _req.body;
-    console.log(_req.body);
+    console.log(_req.body, totalAmount);
     // Declarar las variables locales aquí
     const configObject = new Configuration();
     const enable_capture = true;
@@ -238,7 +238,7 @@ const simple_authorization_internet = async (_req, res) => {
 
     const orderInformation = new cybersourceRestApi.Ptsv2paymentsOrderInformation();
     const orderInformationAmountDetails = new cybersourceRestApi.Ptsv2paymentsOrderInformationAmountDetails();
-    orderInformationAmountDetails.totalAmount = totalAmount;
+    orderInformationAmountDetails.totalAmount = "1.00";
     orderInformationAmountDetails.currency = 'GTQ';
     orderInformation.amountDetails = orderInformationAmountDetails;
     console.log('\nData : ', 1)
