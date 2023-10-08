@@ -43,55 +43,55 @@ const enroll_with_pending_authentication = (_req, res) => {
       totalAmount,
       fingerprintSessionId
     } = _req.body;
-    
+    console.log(totalAmount)
     // Declarar las variables locales aquí
     const configObject = new Configuration();
     const apiClient = new cybersourceRestApi.ApiClient();
     const requestObj = new cybersourceRestApi.CreatePaymentRequest();
 
     const clientReferenceInformation = new cybersourceRestApi.Riskv1decisionsClientReferenceInformation();
-    clientReferenceInformation.code = 'erollment';
-    requestObj.clientReferenceInformation = clientReferenceInformation;
+		clientReferenceInformation.code = 'erollment';
+		requestObj.clientReferenceInformation = clientReferenceInformation;
 
     const orderInformation = new cybersourceRestApi.Riskv1authenticationsOrderInformation();
-    const orderInformationAmountDetails = new cybersourceRestApi.Riskv1authenticationsOrderInformationAmountDetails();
-    orderInformationAmountDetails.currency = 'GTQ';
-    orderInformationAmountDetails.totalAmount = totalAmount;
-    orderInformation.amountDetails = orderInformationAmountDetails;
+		const orderInformationAmountDetails = new cybersourceRestApi.Riskv1authenticationsOrderInformationAmountDetails();
+		orderInformationAmountDetails.currency = 'GTQ';
+		orderInformationAmountDetails.totalAmount = totalAmount;
+		orderInformation.amountDetails = orderInformationAmountDetails;
 
     const orderInformationBillTo = new cybersourceRestApi.Riskv1authenticationsOrderInformationBillTo();
-    orderInformationBillTo.address1 = '1 Market St';
-    orderInformationBillTo.address2 = 'Address 2';
-    orderInformationBillTo.administrativeArea = 'CA';
-    orderInformationBillTo.country = 'US';
-    orderInformationBillTo.locality = 'san francisco';
-    orderInformationBillTo.firstName = 'John';
-    orderInformationBillTo.lastName = 'Doe';
-    orderInformationBillTo.phoneNumber = '4158880000';
-    orderInformationBillTo.email = 'test@cybs.com';
-    orderInformationBillTo.postalCode = '94105';
-    orderInformation.billTo = orderInformationBillTo;
-    requestObj.orderInformation = orderInformation;
+		orderInformationBillTo.firstName = 'John';
+		orderInformationBillTo.lastName = 'Doe';
+		orderInformationBillTo.address1 = 'Ciudad Guatemala';
+    orderInformationBillTo.address2 = 'Guatemala';
+		orderInformationBillTo.locality = 'Guatemala';
+		orderInformationBillTo.administrativeArea = 'CA';
+		orderInformationBillTo.postalCode = '01001';
+		orderInformationBillTo.country = 'GT';
+		orderInformationBillTo.email = 'null@cybersource.com';
+		orderInformationBillTo.phoneNumber = '4158880000';
+		orderInformation.billTo = orderInformationBillTo;
+		requestObj.orderInformation = orderInformation;
 
-    const paymentInformation = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformation();
-    const paymentInformationCard = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformationCard();
-    paymentInformationCard.type = '001';
-    paymentInformationCard.expirationMonth = expirationMonth;
-    paymentInformationCard.expirationYear = expirationYear;
-    paymentInformationCard.number = numberCard;
-    paymentInformation.card = paymentInformationCard;
+		const paymentInformation = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformation();
+		const paymentInformationCard = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformationCard();
+		paymentInformationCard.type = '001';
+		paymentInformationCard.expirationMonth = expirationMonth;
+		paymentInformationCard.expirationYear = expirationYear;
+		paymentInformationCard.number = numberCard;
+		paymentInformation.card = paymentInformationCard;
     
     requestObj.paymentInformation = paymentInformation;
 
     const consumerAuthenticationInformation = new cybersourceRestApi.Riskv1decisionsConsumerAuthenticationInformation();
-    consumerAuthenticationInformation.transactionMode = 'MOTO';
-    requestObj.consumerAuthenticationInformation = consumerAuthenticationInformation;
+		consumerAuthenticationInformation.transactionMode = 'MOTO';
+		requestObj.consumerAuthenticationInformation = consumerAuthenticationInformation;
 
     const deviceInformation = new cybersourceRestApi.Ptsv2paymentsDeviceInformation();
     deviceInformation.fingerprintSessionId = fingerprintSessionId;
-    requestObj.deviceInformation = deviceInformation;
+		requestObj.deviceInformation = deviceInformation;
 
-    console.log("[ REQUEST OBJECT ] > ", requestObj);
+    console.log("[ REQUEST OBJECT ENROLLMENT ] > ", requestObj);
     const instance = new cybersourceRestApi.PayerAuthenticationApi(configObject, apiClient);
     
     console.log('\nData : ', 3)
@@ -157,7 +157,7 @@ const setup_completion_with_card_number = (_req, res) => {
     
     requestObj.paymentInformation = paymentInformation;
 
-    console.log("[ REQUEST OBJECT ] > ", requestObj);
+    console.log("[ REQUEST OBJECT SETUP ] > ", requestObj);
     const instance = new cybersourceRestApi.PayerAuthenticationApi(configObject, apiClient);
     
     console.log('\nData : ', 3)
@@ -201,9 +201,9 @@ const simple_authorization_internet = async (_req, res) => {
       totalAmount,
       fingerprintSessionId,
       referenceId,
-      authenticationTransactionId
+      authenticationTransactionId,
     } = _req.body;
-    console.log(_req.body, totalAmount);
+
     // Declarar las variables locales aquí
     const configObject = new Configuration();
     const enable_capture = true;
@@ -211,7 +211,7 @@ const simple_authorization_internet = async (_req, res) => {
     const requestObj = new cybersourceRestApi.CreatePaymentRequest();
 
     const clientReferenceInformation = new cybersourceRestApi.Ptsv2paymentsClientReferenceInformation();
-    clientReferenceInformation.code = 'TC50171_3';
+    clientReferenceInformation.code = 'payment';
     requestObj.clientReferenceInformation = clientReferenceInformation;
 
     const consumerAuthenticationInformation = new cybersourceRestApi.Ptsv2paymentsConsumerAuthenticationInformation();
@@ -221,7 +221,7 @@ const simple_authorization_internet = async (_req, res) => {
 
     const processingInformation = new cybersourceRestApi.Ptsv2paymentsProcessingInformation();
     processingInformation.capture = false;
-    processingInformation.profile = "AB4F294B-4EE9-4650-986D-E434073B9824";
+    // processingInformation.profile = "AB4F294B-4EE9-4650-986D-E434073B9824";
     if (enable_capture === true) {
       processingInformation.capture = true;
     }
@@ -235,32 +235,33 @@ const simple_authorization_internet = async (_req, res) => {
     paymentInformationCard.securityCode = securityCode;
     paymentInformation.card = paymentInformationCard;
     requestObj.paymentInformation = paymentInformation;
-
+    
     const orderInformation = new cybersourceRestApi.Ptsv2paymentsOrderInformation();
     const orderInformationAmountDetails = new cybersourceRestApi.Ptsv2paymentsOrderInformationAmountDetails();
-    orderInformationAmountDetails.totalAmount = "1.00";
+    orderInformationAmountDetails.totalAmount = totalAmount;
     orderInformationAmountDetails.currency = 'GTQ';
     orderInformation.amountDetails = orderInformationAmountDetails;
     console.log('\nData : ', 1)
     const orderInformationBillTo = new cybersourceRestApi.Ptsv2paymentsOrderInformationBillTo();
-    orderInformationBillTo.firstName = 'Prueba';
-    orderInformationBillTo.lastName = 'Prueba';
-    orderInformationBillTo.address1 = 'zona 11';
-    orderInformationBillTo.locality = 'Ciudad Guatemala';
-    orderInformationBillTo.administrativeArea = 'CA'; 
-    orderInformationBillTo.postalCode = '01011';
-    orderInformationBillTo.country = 'GT';
-    orderInformationBillTo.email = 'test@cybs.com';
-    orderInformationBillTo.phoneNumber = '4158880000';
-    orderInformation.billTo = orderInformationBillTo;
+		orderInformationBillTo.firstName = 'John';
+		orderInformationBillTo.lastName = 'Doe';
+		orderInformationBillTo.address1 = 'Ciudad Guatemala';
+		orderInformationBillTo.locality = 'Guatemala';
+		orderInformationBillTo.administrativeArea = 'CA';
+		orderInformationBillTo.postalCode = '01001';
+		orderInformationBillTo.country = 'GT';
+		orderInformationBillTo.email = 'null@cybersource.com';
+		orderInformationBillTo.phoneNumber = '4158880000';
+		orderInformation.billTo = orderInformationBillTo
     requestObj.orderInformation = orderInformation;
     console.log('\nData : ', 2)
-
+    console.log(fingerprintSessionId)
     const deviceInformation = new cybersourceRestApi.Ptsv2paymentsDeviceInformation();
     deviceInformation.fingerprintSessionId = fingerprintSessionId;
 		requestObj.deviceInformation = deviceInformation;
+
+    console.log("[ REQUEST OBJECT ] > ", requestObj);
     const instance = new cybersourceRestApi.PaymentsApi(configObject, apiClient);
-    //console.log("[ REQUEST OBJECT ] > ", requestObj);
     console.log('\nData : ', 3)
     // Utiliza una promesa para crear el pago
     let dataArray = []; // Cambia el nombre de la variable a "dataArray" o el nombre que prefieras
