@@ -56,7 +56,7 @@ const enroll_with_pending_authentication = (_req, res) => {
     const orderInformation = new cybersourceRestApi.Riskv1authenticationsOrderInformation();
 		const orderInformationAmountDetails = new cybersourceRestApi.Riskv1authenticationsOrderInformationAmountDetails();
 		orderInformationAmountDetails.currency = 'GTQ';
-		orderInformationAmountDetails.totalAmount = totalAmount;
+		orderInformationAmountDetails.totalAmount = "1.00";
 		orderInformation.amountDetails = orderInformationAmountDetails;
 
     const orderInformationBillTo = new cybersourceRestApi.Riskv1authenticationsOrderInformationBillTo();
@@ -203,7 +203,7 @@ const simple_authorization_internet = async (_req, res) => {
       referenceId,
       authenticationTransactionId,
     } = _req.body;
-
+    console.log(totalAmount)
     // Declarar las variables locales aquí
     const configObject = new Configuration();
     const enable_capture = true;
@@ -238,7 +238,7 @@ const simple_authorization_internet = async (_req, res) => {
     
     const orderInformation = new cybersourceRestApi.Ptsv2paymentsOrderInformation();
     const orderInformationAmountDetails = new cybersourceRestApi.Ptsv2paymentsOrderInformationAmountDetails();
-    orderInformationAmountDetails.totalAmount = totalAmount;
+    orderInformationAmountDetails.totalAmount = "1.00";
     orderInformationAmountDetails.currency = 'GTQ';
     orderInformation.amountDetails = orderInformationAmountDetails;
     console.log('\nData : ', 1)
