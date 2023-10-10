@@ -41,9 +41,14 @@ const enroll_with_pending_authentication = (_req, res) => {
       expirationMonth,
       expirationYear,
       totalAmount,
-      fingerprintSessionId
+      fingerprintSessionId,
+      department,
+      address,
+      name,
+      postalCode
     } = _req.body;
     console.log(totalAmount)
+    const nameSplit = name.split(" ");
     // Declarar las variables locales aquí
     const configObject = new Configuration();
     const apiClient = new cybersourceRestApi.ApiClient();
@@ -60,17 +65,16 @@ const enroll_with_pending_authentication = (_req, res) => {
 		orderInformation.amountDetails = orderInformationAmountDetails;
 
     const orderInformationBillTo = new cybersourceRestApi.Riskv1authenticationsOrderInformationBillTo();
-		orderInformationBillTo.firstName = 'John';
-		orderInformationBillTo.lastName = 'Doe';
-		orderInformationBillTo.address1 = 'Ciudad Guatemala';
-    orderInformationBillTo.address2 = 'Guatemala';
-		orderInformationBillTo.locality = 'Guatemala';
+		orderInformationBillTo.firstName = nameSplit[0];
+		orderInformationBillTo.lastName = nameSplit[1];
+		orderInformationBillTo.address1 = address;
+		orderInformationBillTo.locality = department;
 		orderInformationBillTo.administrativeArea = 'CA';
-		orderInformationBillTo.postalCode = '01001';
+		orderInformationBillTo.postalCode = postalCode;
 		orderInformationBillTo.country = 'GT';
 		orderInformationBillTo.email = 'null@cybersource.com';
 		orderInformationBillTo.phoneNumber = '4158880000';
-		orderInformation.billTo = orderInformationBillTo;
+		orderInformation.billTo = orderInformationBillTo
 		requestObj.orderInformation = orderInformation;
 
 		const paymentInformation = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformation();
@@ -202,8 +206,13 @@ const simple_authorization_internet = async (_req, res) => {
       fingerprintSessionId,
       referenceId,
       authenticationTransactionId,
+      department,
+      address,
+      name,
+      postalCode
     } = _req.body;
-    console.log(totalAmount)
+    const nameSplit = name.split(" ");
+
     // Declarar las variables locales aquí
     const configObject = new Configuration();
     const enable_capture = true;
@@ -243,12 +252,12 @@ const simple_authorization_internet = async (_req, res) => {
     orderInformation.amountDetails = orderInformationAmountDetails;
     console.log('\nData : ', 1)
     const orderInformationBillTo = new cybersourceRestApi.Ptsv2paymentsOrderInformationBillTo();
-		orderInformationBillTo.firstName = 'John';
-		orderInformationBillTo.lastName = 'Doe';
-		orderInformationBillTo.address1 = 'Ciudad Guatemala';
-		orderInformationBillTo.locality = 'Guatemala';
+		orderInformationBillTo.firstName = nameSplit[0];
+		orderInformationBillTo.lastName = nameSplit[1];
+		orderInformationBillTo.address1 = address;
+		orderInformationBillTo.locality = department;
 		orderInformationBillTo.administrativeArea = 'CA';
-		orderInformationBillTo.postalCode = '01001';
+		orderInformationBillTo.postalCode = postalCode;
 		orderInformationBillTo.country = 'GT';
 		orderInformationBillTo.email = 'null@cybersource.com';
 		orderInformationBillTo.phoneNumber = '4158880000';
