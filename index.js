@@ -42,6 +42,9 @@ const enroll_with_pending_authentication = (_req, res) => {
       expirationYear,
       totalAmount,
       fingerprintSessionId,
+      referenceId,
+      email,
+      whatsapp,
       department,
       address,
       name,
@@ -69,17 +72,20 @@ const enroll_with_pending_authentication = (_req, res) => {
 		orderInformationBillTo.lastName = nameSplit[1];
 		orderInformationBillTo.address1 = address;
 		orderInformationBillTo.locality = department;
-		orderInformationBillTo.administrativeArea = 'CA';
 		orderInformationBillTo.postalCode = postalCode;
 		orderInformationBillTo.country = 'GT';
-		orderInformationBillTo.email = 'null@cybersource.com';
-		orderInformationBillTo.phoneNumber = '4158880000';
+		orderInformationBillTo.email = email;
+		orderInformationBillTo.phoneNumber = whatsapp;
 		orderInformation.billTo = orderInformationBillTo
 		requestObj.orderInformation = orderInformation;
 
 		const paymentInformation = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformation();
 		const paymentInformationCard = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformationCard();
-		paymentInformationCard.type = '001';
+		if (numberCard.startsWith("4")) {
+      paymentInformationCard.type = '001';
+    } else if (numberCard.startsWith("5")) {
+      paymentInformationCard.type = '002';
+    }
 		paymentInformationCard.expirationMonth = expirationMonth;
 		paymentInformationCard.expirationYear = expirationYear;
 		paymentInformationCard.number = numberCard;
@@ -88,7 +94,9 @@ const enroll_with_pending_authentication = (_req, res) => {
     requestObj.paymentInformation = paymentInformation;
 
     const consumerAuthenticationInformation = new cybersourceRestApi.Riskv1decisionsConsumerAuthenticationInformation();
-		consumerAuthenticationInformation.transactionMode = 'MOTO';
+		consumerAuthenticationInformation.returnUrl = 'https://appfee-5a08db13047a.herokuapp.com/payment/risk/authentication/result';
+    consumerAuthenticationInformation.referenceId = referenceId;
+    consumerAuthenticationInformation.transactionMode = 'S';
 		requestObj.consumerAuthenticationInformation = consumerAuthenticationInformation;
 
     const deviceInformation = new cybersourceRestApi.Ptsv2paymentsDeviceInformation();
@@ -129,6 +137,133 @@ const enroll_with_pending_authentication = (_req, res) => {
   }
 }
 
+const validate_authentication_results = (_req, res) => {
+  try {
+    const {
+      TransactionId,
+      MD
+    } = _req.body;
+    console.log("[AUTH BODY] >>>", _req.body)
+    const dataMD = MD.split("|")
+		const configObject = new Configuration();
+		const apiClient = new cybersourceRestApi.ApiClient();
+		const requestObj = new cybersourceRestApi.ValidateRequest();
+
+		const clientReferenceInformation = new cybersourceRestApi.Riskv1decisionsClientReferenceInformation();
+		clientReferenceInformation.code = '3dsValidate';
+		requestObj.clientReferenceInformation = clientReferenceInformation;
+
+		const orderInformation = new cybersourceRestApi.Riskv1authenticationresultsOrderInformation();
+		const orderInformationAmountDetails = new cybersourceRestApi.Riskv1authenticationsOrderInformationAmountDetails();
+		orderInformationAmountDetails.currency = 'GTQ';
+		orderInformationAmountDetails.totalAmount = dataMD[0];
+		orderInformation.amountDetails = orderInformationAmountDetails;
+
+		requestObj.orderInformation = orderInformation;
+
+		const paymentInformation = new cybersourceRestApi.Riskv1authenticationresultsPaymentInformation();
+		const paymentInformationCard = new cybersourceRestApi.Riskv1authenticationresultsPaymentInformationCard();
+		if (dataMD[1].startsWith("4")) {
+      paymentInformationCard.type = '001';
+    } else if (dataMD[1].startsWith("5")) {
+      paymentInformationCard.type = '002';
+    }
+		paymentInformationCard.expirationMonth = dataMD[2];
+		paymentInformationCard.expirationYear = dataMD[3];
+		paymentInformationCard.number = dataMD[1];
+		paymentInformation.card = paymentInformationCard;
+
+		requestObj.paymentInformation = paymentInformation;
+
+		const consumerAuthenticationInformation = new cybersourceRestApi.Riskv1authenticationresultsConsumerAuthenticationInformation();
+		consumerAuthenticationInformation.authenticationTransactionId = TransactionId;
+		requestObj.consumerAuthenticationInformation = consumerAuthenticationInformation;
+
+
+		const instance = new cybersourceRestApi.PayerAuthenticationApi(configObject, apiClient);
+
+		instance.validateAuthenticationResults( requestObj, function (error, data, response) {
+      if(error) {
+				// console.log('\nError : ' + JSON.stringify(error));
+			}
+			else if (data) {
+				// console.log('\nData : ' + JSON.stringify(data));
+			}
+
+			// console.log('\nResponse : ' + JSON.stringify(response));
+			// console.log('\nResponse Code of Validate Authentication Results : ' + JSON.stringify(response['status']));
+      const responseData = {
+        text: 'response3DS',
+        totalAmount: dataMD[0],
+        card: dataMD[1],
+        expirationMonth: dataMD[2],
+        expirationYear: dataMD[3],
+        securityCode: dataMD[4],
+        transactionId: dataMD[5],
+        whatsapp: dataMD[6],
+        email: dataMD[7],
+        nit: dataMD[8],
+        name: dataMD[9],
+        trv: dataMD[10],
+        trc: dataMD[11],
+        priceTrv: dataMD[12],
+        priceTrc: dataMD[13],
+        department: dataMD[14],
+        address: dataMD[15],
+        postalCode: dataMD[16],
+        nameCard: dataMD[17],
+        data,
+        error
+      };
+      console.log(data)
+      if (data.status === "AUTHENTICATION_SUCCESSFUL") {
+        res.set('Content-Type', 'text/html')
+        res.status(200).send(Buffer.from(`<!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset='utf-8'>
+          <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+          <meta name='viewport' content='width=device-width, initial-scale=1'>
+        </head>
+        <body>
+          <h1>AUTENTUCACION COMPLETA</h1>
+        </body>
+        <script>
+          window.onload = function() {
+            window.parent.postMessage(${JSON.stringify(responseData)}, 'https://tickets.fincaelespinero.com')
+          }
+        </script>
+        </html>`))
+      } else {
+        res.set('Content-Type', 'text/html')
+        res.status(200).send(Buffer.from(`<!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset='utf-8'>
+          <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+          <meta name='viewport' content='width=device-width, initial-scale=1'>
+        </head>
+        <body>
+          <h1>ALGO SALIO MAL CON LA AUTENTICACION</h1>
+        </body>
+        <script>
+          window.onload = function() {
+            window.parent.postMessage(${JSON.stringify(responseData)}, 'https://tickets.fincaelespinero.com')
+          }
+        </script>
+        </html>`))
+      }
+    });
+    console.log('\nData : ', 5)
+  } catch (error) {
+    console.log('\nException on calling the API : ' + error);
+    res.status(200).json({
+      error,
+      status: 'ERROR'
+    });
+  }
+}
+
 const setup_completion_with_card_number = (_req, res) => {
   try {
     const {
@@ -145,15 +280,19 @@ const setup_completion_with_card_number = (_req, res) => {
     const clientReferenceInformation = new cybersourceRestApi.Riskv1decisionsClientReferenceInformation();
     clientReferenceInformation.code = 'authentication_setup';
     const clientReferenceInformationPartner = new cybersourceRestApi.Riskv1decisionsClientReferenceInformationPartner();
-    clientReferenceInformationPartner.developerId = '7891234';
-    clientReferenceInformationPartner.solutionId = '89012345';
+    // clientReferenceInformationPartner.developerId = '7891234';
+    // clientReferenceInformationPartner.solutionId = '89012345';
     clientReferenceInformation.partner = clientReferenceInformationPartner;
 
     requestObj.clientReferenceInformation = clientReferenceInformation;
 
     const paymentInformation = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformation();
     const paymentInformationCard = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformationCard();
-    paymentInformationCard.type = '001';
+    if (numberCard.startsWith("4")) {
+      paymentInformationCard.type = '001';
+    } else if (numberCard.startsWith("5")) {
+      paymentInformationCard.type = '002';
+    }
     paymentInformationCard.expirationMonth = expirationMonth;
     paymentInformationCard.expirationYear = expirationYear;
     paymentInformationCard.number = numberCard;
@@ -209,7 +348,9 @@ const simple_authorization_internet = async (_req, res) => {
       department,
       address,
       name,
-      postalCode
+      postalCode,
+      email,
+      whatsapp
     } = _req.body;
     const nameSplit = name.split(" ");
 
@@ -256,11 +397,10 @@ const simple_authorization_internet = async (_req, res) => {
 		orderInformationBillTo.lastName = nameSplit[1];
 		orderInformationBillTo.address1 = address;
 		orderInformationBillTo.locality = department;
-		orderInformationBillTo.administrativeArea = 'CA';
 		orderInformationBillTo.postalCode = postalCode;
 		orderInformationBillTo.country = 'GT';
-		orderInformationBillTo.email = 'null@cybersource.com';
-		orderInformationBillTo.phoneNumber = '4158880000';
+    orderInformationBillTo.email = email;
+		orderInformationBillTo.phoneNumber = whatsapp;
 		orderInformation.billTo = orderInformationBillTo
     requestObj.orderInformation = orderInformation;
     console.log('\nData : ', 2)
@@ -322,6 +462,7 @@ app.post('/createToken',_tokenFunctions.createToken);
 app.post('/processPaymentTickets', protectRoute.protectRoute, simple_authorization_internet);
 app.post("/payment/risk", protectRoute.protectRoute, setup_completion_with_card_number);
 app.post("/payment/risk/authentication", protectRoute.protectRoute, enroll_with_pending_authentication);
+app.post("/payment/risk/authentication/result", validate_authentication_results);
   
 app.listen(port, () => {
   console.log(`Servidor Express escuchando en el puerto ${port}`);
