@@ -423,23 +423,13 @@ const simple_authorization_internet = async (_req, res) => {
       console.log('\nResponse Code of Process a Payment : ' + JSON.stringify(response['status']));
       let status = response['status'];
       //write_log_audit(status);
-      console.log("Datos finales", response.text)
+      console.log("Datos finales", response)
       dataArray.push({ datos: JSON.stringify(response) });
     });
     console.log('\nData : ', 5)
-    const receipt = {
-      "nombre": "Jehiverson Alberto Rodriguez Trujillo",
-      "fecha": "2023-09-20",
-      "precioCorte": 800,
-      "cantidadCorte": 0,
-      "precioVisita": 800,
-      "cantidadVisita": 2,
-      "total": 1600,
-      "phone": 35303737,
-      "email": "jehivis@gmail.com"
-    }
+
     console.log('\nData 6 : ', dataArray)
-    await esperarXSegundos(2);
+    await esperarXSegundos(3);
     res.status(200).json({
       dataArray,
       datospayment,
