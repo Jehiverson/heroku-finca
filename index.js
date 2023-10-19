@@ -184,14 +184,12 @@ const validate_authentication_results = (_req, res) => {
 
 		instance.validateAuthenticationResults( requestObj, function (error, data, response) {
       if(error) {
-				// console.log('\nError : ' + JSON.stringify(error));
+				console.log('\nError : ' + JSON.stringify(error));
 			}
 			else if (data) {
-				// console.log('\nData : ' + JSON.stringify(data));
+				console.log('\nData : ' + JSON.stringify(data));
 			}
 
-			// console.log('\nResponse : ' + JSON.stringify(response));
-			// console.log('\nResponse Code of Validate Authentication Results : ' + JSON.stringify(response['status']));
       const responseData = {
         text: 'response3DS',
         totalAmount: dataMD[0],
