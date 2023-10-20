@@ -7,7 +7,7 @@ const protectRoute = require('./middleware/protectionRouter')
 const _tokenFunctions = require('./middleware/_tokenFunctions')
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3005;
 app.use(express.json());
 app.use(cors());
 
@@ -81,9 +81,9 @@ const enroll_with_pending_authentication = (_req, res) => {
 
 		const paymentInformation = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformation();
 		const paymentInformationCard = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformationCard();
-		if (numberCard.startsWith("4")) {
+		if (numberCard.match(/4/g)) {
       paymentInformationCard.type = '001';
-    } else if (numberCard.startsWith("5")) {
+    } else if (numberCard.match(/5/g)) {
       paymentInformationCard.type = '002';
     }
 		paymentInformationCard.expirationMonth = expirationMonth;
@@ -111,7 +111,7 @@ const enroll_with_pending_authentication = (_req, res) => {
     instance.checkPayerAuthEnrollment( requestObj, function (error, data, response) {
       if (error) {
         console.log('\nError : ' + JSON.stringify(error));
-        write_log_audit(JSON.parse(error.response.text));
+        // write_log_audit(JSON.parse(error.response.text));
       }else if (data) {
         console.log('\nData : ' + JSON.stringify(data));
       }
@@ -163,9 +163,9 @@ const validate_authentication_results = (_req, res) => {
 
 		const paymentInformation = new cybersourceRestApi.Riskv1authenticationresultsPaymentInformation();
 		const paymentInformationCard = new cybersourceRestApi.Riskv1authenticationresultsPaymentInformationCard();
-		if (dataMD[1].startsWith("4")) {
+		if (dataMD[1].match(/4/g)) {
       paymentInformationCard.type = '001';
-    } else if (dataMD[1].startsWith("5")) {
+    } else if (dataMD[1].match(/5/g)) {
       paymentInformationCard.type = '002';
     }
 		paymentInformationCard.expirationMonth = dataMD[2];
@@ -286,9 +286,9 @@ const setup_completion_with_card_number = (_req, res) => {
 
     const paymentInformation = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformation();
     const paymentInformationCard = new cybersourceRestApi.Riskv1authenticationsetupsPaymentInformationCard();
-    if (numberCard.startsWith("4")) {
+    if (numberCard.match(/4/g)) {
       paymentInformationCard.type = '001';
-    } else if (numberCard.startsWith("5")) {
+    } else if (numberCard.match(/5/g)) {
       paymentInformationCard.type = '002';
     }
     paymentInformationCard.expirationMonth = expirationMonth;
@@ -306,7 +306,7 @@ const setup_completion_with_card_number = (_req, res) => {
     instance.payerAuthSetup(requestObj, function (error, data, response) {
       if (error) {
         console.log('\nError : ' + JSON.stringify(error));
-        write_log_audit(JSON.parse(error.response.text));
+        // write_log_audit(JSON.parse(error.response.text));
       }else if (data) {
         console.log('\nData : ' + JSON.stringify(data));
       }
