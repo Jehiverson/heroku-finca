@@ -58,7 +58,7 @@ const enroll_with_pending_authentication = (_req, res) => {
     const requestObj = new cybersourceRestApi.CreatePaymentRequest();
 
     const clientReferenceInformation = new cybersourceRestApi.Riskv1decisionsClientReferenceInformation();
-		clientReferenceInformation.code = 'erollment';
+		clientReferenceInformation.code = 'enrollment';
 		requestObj.clientReferenceInformation = clientReferenceInformation;
 
     const orderInformation = new cybersourceRestApi.Riskv1authenticationsOrderInformation();
@@ -68,8 +68,8 @@ const enroll_with_pending_authentication = (_req, res) => {
 		orderInformation.amountDetails = orderInformationAmountDetails;
 
     const orderInformationBillTo = new cybersourceRestApi.Riskv1authenticationsOrderInformationBillTo();
-		orderInformationBillTo.firstName = nameSplit[0] ? nameSplit[0] : " ";
-		orderInformationBillTo.lastName = nameSplit[1] ? nameSplit[1] : " ";
+		orderInformationBillTo.firstName = nameSplit[0] ? nameSplit[0] : " --- ";
+		orderInformationBillTo.lastName = nameSplit[1] ? nameSplit[1] : " --- ";
 		orderInformationBillTo.address1 = address;
 		orderInformationBillTo.locality = department;
 		orderInformationBillTo.postalCode = postalCode;
@@ -391,8 +391,8 @@ const simple_authorization_internet = async (_req, res) => {
     orderInformation.amountDetails = orderInformationAmountDetails;
     console.log('\nData : ', 1)
     const orderInformationBillTo = new cybersourceRestApi.Ptsv2paymentsOrderInformationBillTo();
-		orderInformationBillTo.firstName = nameSplit[0] ? nameSplit[0] : " ";
-		orderInformationBillTo.lastName = nameSplit[1] ? nameSplit[1] : " ";
+		orderInformationBillTo.firstName = nameSplit[0] ? nameSplit[0] : " --- ";
+		orderInformationBillTo.lastName = nameSplit[1] ? nameSplit[1] : " --- ";
 		orderInformationBillTo.address1 = address;
 		orderInformationBillTo.locality = department;
 		orderInformationBillTo.postalCode = postalCode;
